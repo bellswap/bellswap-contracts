@@ -1,0 +1,102 @@
+# Bellswap Foundry configuration.
+# Compiler settings follow SPEC 5.4 and 11.1 and match Bellguard
+# (<workspace>/bellguard/bellguard/foundry.toml), which is known to deploy on 4663 and 46630.
+# Remappings live in remappings.txt.
+
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+libs = ["lib"]
+# Only the remappings in remappings.txt; no auto-detected entries from nested dependency folders.
+auto_detect_remappings = false
+out = "out"
+cache_path = "cache"
+solc_version = "0.8.26"
+evm_version = "cancun"
+optimizer = true
+optimizer_runs = 800
+via_ir = false
+# test/spec/NamingLint.t.sol reads every file under src/.
+fs_permissions = [{ access = "read", path = "./src" }]
+
+[profile.default.fuzz]
+runs = 256
+
+# Four concurrent build and test lanes in one checkout. Each profile inherits every setting from
+# [profile.default] and differs only in its artifact, cache and fuzz or invariant failure directories,
+# so concurrent lanes never share a failure file.
+# Usage: FOUNDRY_PROFILE=c1 forge build ; FOUNDRY_PROFILE=c1 forge test
+[profile.c1]
+out = "out-c1"
+cache_path = "cache-c1"
+
+[profile.c1.fuzz]
+failure_persist_dir = "cache-c1/fuzz"
+
+[profile.c1.invariant]
+failure_persist_dir = "cache-c1/invariant"
+
+[profile.c2]
+out = "out-c2"
+cache_path = "cache-c2"
+
+[profile.c2.fuzz]
+failure_persist_dir = "cache-c2/fuzz"
+
+[profile.c2.invariant]
+failure_persist_dir = "cache-c2/invariant"
+
+[profile.c3]
+out = "out-c3"
+cache_path = "cache-c3"
+
+[profile.c3.fuzz]
+failure_persist_dir = "cache-c3/fuzz"
+
+[profile.c3.invariant]
+failure_persist_dir = "cache-c3/invariant"
+
+[profile.c4]
+out = "out-c4"
+cache_path = "cache-c4"
+
+[profile.c4.fuzz]
+failure_persist_dir = "cache-c4/fuzz"
+
+[profile.c4.invariant]
+failure_persist_dir = "cache-c4/invariant"
+
+# SPEC 11.4 nightly invariant run: 10,000 runs per invariant. Tests that pin their own runs with inline
+# `forge-config: default.invariant.*` keep those values; they add `invariant.invariant.*` lines to take part.
+# Usage: FOUNDRY_PROFILE=invariant forge test --match-test '^invariant'
+[profile.invariant]
+out = "out-invariant"
+cache_path = "cache-invariant"
+
+[profile.invariant.fuzz]
+failure_persist_dir = "cache-invariant/fuzz"
+
+[profile.invariant.invariant]
+runs = 10000
+depth = 500
+failure_persist_dir = "cache-invariant/invariant"
+
+# SPEC 11.3 read-only fork tests against keyless endpoints. Fork tests skip themselves without network.
+# Usage: FOUNDRY_PROFILE=fork forge test --match-path 'test/**/*Fork*'
+[profile.fork]
+out = "out-fork"
+cache_path = "cache-fork"
+
+[profile.fork.fuzz]
+failure_persist_dir = "cache-fork/fuzz"
+
+[profile.fork.invariant]
+failure_persist_dir = "cache-fork/invariant"
+
+# Keyless public endpoints only. Never put a URL that carries an API key here.
+[rpc_endpoints]
+ethereum = "https://ethereum-rpc.publicnode.com"
+sepolia = "https://ethereum-sepolia-rpc.publicnode.com"
+robinhood = "https://robinhood-rpc.publicnode.com"
+robinhood_testnet = "https://rpc.testnet.chain.robinhood.com"

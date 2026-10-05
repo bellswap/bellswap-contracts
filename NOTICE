@@ -1,0 +1,55 @@
+Bellswap
+Copyright (c) 2026 Bellswap contributors
+Licensed under the MIT License (see LICENSE).
+
+This product includes or derives from the following third-party work.
+
+1. Bellguard (MIT)
+   Copyright (c) 2026 Bellguard contributors
+   Source: <workspace>/bellguard/bellguard, ported at commit 3ab656b (2026-09-09, branch
+   worker; first commit 1d709a1, 2026-09-07). Its main branch has since moved on and does not
+   contain 3ab656b; nothing from later commits is included.
+   Licence: MIT. Bellguard's LICENSE differs from this repository's LICENSE only in its copyright
+   line, which is the one given above.
+   Bellguard is a pre-existing dependency declared under the buildathon rules. SPEC 7.1 lists what
+   is reused and how it changes. Files that copy or derive from Bellguard code, each carrying an
+   MIT credit header:
+   - src/hook/BaseHook.sol
+     Ported from src/base/BaseHook.sol:1-230. Changes: pragma pinned to 0.8.26; the NotPoolManager
+     error comes from IBellswapHook (same selector) instead of being declared locally.
+   - src/hook/BellswapHook.sol
+     Derived from src/BellHook.sol: the beforeSwap return shape (:176-184), the gap math
+     (:330-335), the feed read (:317-326), the sqrtPriceX96 to price conversion (:357-362) and the
+     decimals read (:399-404), each changed as SPEC 7.1 states. Admission, BellConfig, the float
+     guard and reserve tracking are dropped.
+   - test/hook/BellswapHook.t.sol (test only)
+     Harness ported from test/BellHook.t.sol:27-164 (Deployers setup, HookMiner deployment, key
+     and sqrtPrice helpers, Swap event fee reader); the tests themselves are rewritten.
+   - test/hook/mocks/HookMocks.sol (test only)
+     MockFeed extends test/mocks/MockAggregator.sol:1-34; the other mocks are own code.
+   - test/spec/c3/C3SpecMocks.sol (test only)
+     C3SpecAggregator derives from test/mocks/MockAggregator.sol.
+   - test/spec/c3/C3HookBase.sol (test only)
+     Harness pattern (PoolManager from Deployers, HookMiner salt, fixed warp) follows
+     test/BellHook.t.sol.
+
+2. HookMiner (MIT)
+   File: src/vendor/HookMiner.sol, unmodified.
+   Copyright 2023 Universal Navigation Inc.
+   Source: https://github.com/Uniswap/v4-periphery, commit dce236d4e2057422d0791d9a973a58765eb46f65,
+   path test/shared/HookMiner.sol.
+   Licence text: src/vendor/licenses/LICENSE-MIT.v4-periphery
+
+3. AddressAliasHelper (Apache-2.0)
+   File: src/vendor/AddressAliasHelper.sol, unmodified.
+   Copyright 2019-2021, Offchain Labs, Inc.
+   Source: https://github.com/OffchainLabs/token-bridge-contracts, tag v1.2.5,
+   commit 7c90b43fee0072a3515147822faf5b20fbcf134b,
+   path contracts/tokenbridge/libraries/AddressAliasHelper.sol.
+   Licence text: src/vendor/licenses/LICENSE-APACHE-2.0.token-bridge-contracts
+
+src/vendor/IInboxMinimal.sol is own MIT code written from the Bellswap specification; no code from
+OffchainLabs/nitro-contracts (BUSL-1.1) is included.
+
+Build and test dependencies under lib/ are fetched at pinned commits and keep their own licences;
+see docs/DEPENDENCIES.md.
