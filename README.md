@@ -1,8 +1,10 @@
 # Bellswap contracts
 
-Bellswap is a Uniswap v4 hook and a synthetic market on Robinhood Chain. The hook sets the swap fee from the gap between the pool price and a reference price relayed from Ethereum: 0.30% inside a 10% gap, rising to 3% as the gap widens, and 3% in both directions when the reference is stale. bsX0 is a synthetic of the BWET reference, minted against USDG at 400% collateral.
+Bellswap is a Uniswap v4 hook and a synthetic market on Robinhood Chain. The hook sets the swap fee from the gap between the pool price and a reference price relayed from Ethereum: 0.30% inside a 10% gap, rising to 3% as the gap widens, and 3% in both directions when the reference is stale. bsX0 is a synthetic of the reference feed for subject 0xEcA55ac71f83931B7e074228AEBc9104F13d8c02 (shown as BWET on bellswap.fun), minted against USDG at 400% collateral.
 
-**Unaudited. Use at your own risk. Real funds.**
+**Unaudited. Use at your own risk. Real money.**
+
+Seventeen findings of an internal review on 2 October 2026 are open and unfixed in the deployed contracts, and the TANKR market has further known residual paths. See [AUDIT-SCOPE.md](AUDIT-SCOPE.md), section 6.
 
 ## Deployed on mainnet
 
@@ -19,6 +21,8 @@ Bellswap is a Uniswap v4 hook and a synthetic market on Robinhood Chain. The hoo
 Pool id: 0x1c45f406c6ce0ee24c8b10172e2af4da7780962e2f242a4795c0a5cdf46633c2
 
 The pool lives on the Uniswap v4 PoolManager at 0x8366a39CC670B4001A1121B8F6A443A643e40951 (https://robinhoodchain.blockscout.com/address/0x8366a39CC670B4001A1121B8F6A443A643e40951).
+
+The TANKR market (0x0B199dA32205A5986f8DBDbed1b9c9c86FD7B3f2), deployed on Robinhood Chain on 7 October 2026, reads the reference feed above, and its TANKR/USDG pool runs on this hook. The V3 market factory (0x5c4B9baf485D1B72f46Ef84889c33CBca99f3D1E), deployed the same day, deploys such markets. Their source is in https://github.com/bellswap/bellswap-markets.
 
 ## Source of record
 
